@@ -1,0 +1,12 @@
+# nextflow generated stuff
+work
+.nextflow.log*
+.nextflow*
+# user-related stuff
+bin/
+results*
+output*
+
+TODO*
+setup_env.sh
+my_log_file.txt
