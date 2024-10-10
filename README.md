@@ -42,8 +42,7 @@ and a python installation with dependencies for UQ-toolkit installed, as well as
 ```bash
 # download and set path to UQ-toolkit
 git clone https://github.com/farscape-project/uq-toolkit.git $MYWORKDIR/uq-toolkit
-cd $MYWORKDIR/uq-toolkit
-export UQKITPATH=$PWD
+export UQKITPATH=$MYWORKDIR/uq-toolkit
 ```
 
 For the examples, you can use the following paths in uq-toolkit
