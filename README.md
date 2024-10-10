@@ -10,6 +10,11 @@ Below we detail the steps for running a Nextflow+MOOSE pipeline. To enable getti
 
 ### Prerequisities
 
+We assume the user has a python3 installation with commonly-used modules such as numpy, matplotlib and scipy. Load your environment and install the following additional modules (if not already), which UQ-toolkit depends on:
+```bash
+pip install hjson UQpy
+```
+
 Nextflow can be installed as shown below, note that it depends on Java >= 11.0.
 ```bash
 cd $MYWORKDIR 
@@ -39,8 +44,6 @@ and a python installation with dependencies for UQ-toolkit installed, as well as
 git clone https://github.com/farscape-project/uq-toolkit.git $MYWORKDIR/uq-toolkit
 cd $MYWORKDIR/uq-toolkit
 export UQKITPATH=$PWD
-# load your own or the system's python3. It is assumed this has standard libraries such as numpy, matplotlib etc
-pip install hjson UQpy # install uq-toolkit extras
 ```
 
 For the examples, you can use the following paths in uq-toolkit
