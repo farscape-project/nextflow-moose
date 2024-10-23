@@ -22,6 +22,7 @@ process setupJobs {
 
 process runJobs {
     publishDir "results", mode: 'copy'
+    cpus 32
 
     time '1h'
 
@@ -40,7 +41,7 @@ process runJobs {
     """
     cp -r $dirname/ .
     cd sample*
-    combined-opt -i cube_thermal_mechanical.i > logRun
+    mpirun -n 32 combined-opt -i cube_thermal_mechanical.i > logRun
     cd -
     """
 }
