@@ -9,13 +9,14 @@ process findMoose {
     output:
     eval('combined-opt -h')
 
-    script:
+    shell:
     """
-    if [ -f ../../../bin/combined-opt ]; then
+    mkdir -p !{projectDir}/bin
+    if [ -f !{projectDir}/bin/combined-opt ]; then
         echo "solver in bin"
     else
         echo "copying solver"
-        cp $MOOSE_DIR/modules/combined/combined-opt ../../../bin/
+        cp $MOOSE_DIR/modules/combined/combined-opt !{projectDir}/bin/
     fi
     """
 }
@@ -53,7 +54,7 @@ process runJobs {
     path 'sample*'
 
     /* 
-        Note: this expects combined-opt executable to be in $PWD/bin 
+        Note: this expects combined-opt executable to be in !{projectDir}/bin 
     */
     script:
     """
