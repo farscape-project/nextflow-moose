@@ -3,23 +3,6 @@ params.basedirpath = '/lustre/scafellpike/local/HT04544/sht09/jxw92-sht09/projec
 params.uqconfigpath = '/lustre/scafellpike/local/HT04544/sht09/jxw92-sht09/projects/workflow/nextflow/moose-cube-workflow/dev_thermocube/config_thermomech.jsonc'
 params.numsamples = 10
 
-process findMoose {
-    debug true
-
-    output:
-    eval('../../../bin/combined-opt -h')
-
-    shell:
-    """
-    if [ -f ../../../bin/combined-opt ]; then
-        echo "solver in bin"
-    else
-        echo "copying solver"
-        cp $MOOSE_DIR/modules/combined/combined-opt ../../../bin/
-    fi
-    """
-}
-
 process setupJobs {
     publishDir "output_setupjobs", pattern: "*.json", mode: "copy"
     cpus 1
@@ -65,8 +48,6 @@ process runJobs {
 }
 
 workflow {
-    /* assumes $MOOSE_DIR environment variable is set */
-    findMoose()
 
     setupJobs() 
     
@@ -74,7 +55,7 @@ workflow {
         run moose simulations to get all data (exodus, csv etc)
         findMoose.out is dummy variable to create dependence on findMoose
     */
-    runJobs(setupJobs.out.sample_names.flatten(), findMoose.out)
+    runJobs(setupJobs.out.sample_names.flatten())
 }
 
 workflow.onComplete {
