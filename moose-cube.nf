@@ -6,6 +6,8 @@ params.numsamples = 10
 process findMoose {
     debug true
 
+    executor "local"
+
     output:
     eval('combined-opt -h')
 
