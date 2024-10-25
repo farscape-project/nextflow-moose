@@ -30,7 +30,6 @@ process runJobs {
 
     input:
     val dirname
-    val solver_found
 
     output:
     path 'sample*'
