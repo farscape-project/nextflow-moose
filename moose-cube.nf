@@ -3,6 +3,23 @@ params.basedirpath = '/lustre/scafellpike/local/HT04544/sht09/jxw92-sht09/projec
 params.uqconfigpath = '/lustre/scafellpike/local/HT04544/sht09/jxw92-sht09/projects/workflow/nextflow/moose-cube-workflow/dev_thermocube/config_thermomech.jsonc'
 params.numsamples = 10
 
+process findMoose {
+    debug true
+
+    output:
+    eval('combined-opt -h')
+
+    shell:
+    """
+    if [ -f ../../../bin/combined-opt ]; then
+        echo "solver in bin"
+    else
+        echo "copying solver"
+        cp $MOOSE_DIR/modules/combined/combined-opt !{projectDir}/bin/
+    fi
+    """
+}
+
 process setupJobs {
     publishDir "output_setupjobs", pattern: "*.json", mode: "copy"
     cpus 1
@@ -30,6 +47,7 @@ process runJobs {
 
     input:
     val dirname
+    val solver_found
 
     output:
     path 'sample*'
@@ -37,10 +55,9 @@ process runJobs {
     /* 
         Note: this expects combined-opt executable to be in $PWD/bin 
     */
-    shell:
+    script:
     """
-    cp -r !{dirname}/ .
-    echo $PATH
+    cp -r $dirname/ .
     cd sample*
     mpirun -n 32 combined-opt -i cube_thermal_mechanical.i > logRun
     cd -
@@ -48,6 +65,8 @@ process runJobs {
 }
 
 workflow {
+    /* assumes $MOOSE_DIR environment variable is set */
+    findMoose()
 
     setupJobs() 
     
@@ -55,7 +74,7 @@ workflow {
         run moose simulations to get all data (exodus, csv etc)
         findMoose.out is dummy variable to create dependence on findMoose
     */
-    runJobs(setupJobs.out.sample_names.flatten())
+    runJobs(setupJobs.out.sample_names.flatten(), findMoose.out)
 }
 
 workflow.onComplete {
