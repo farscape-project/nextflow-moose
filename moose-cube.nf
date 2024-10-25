@@ -6,6 +6,9 @@ params.numsamples = 10
 process findMoose {
     debug true
 
+    output:
+    eval('combined-opt -h')
+
     script:
     """
     if [ -f ../../../bin/combined-opt ]; then
@@ -44,6 +47,7 @@ process runJobs {
 
     input:
     val dirname
+    val solver_found
 
     output:
     path 'sample*'
@@ -65,10 +69,12 @@ workflow {
     findMoose()
 
     setupJobs() 
-
     
-    /* run moose simulations to get all data (exodus, csv etc) */
-    runJobs(setupJobs.out.sample_names.flatten())
+    /* 
+        run moose simulations to get all data (exodus, csv etc)
+        findMoose.out is dummy variable to create dependence on findMoose
+    */
+    runJobs(setupJobs.out.sample_names.flatten(), findMoose.out)
 }
 
 workflow.onComplete {
