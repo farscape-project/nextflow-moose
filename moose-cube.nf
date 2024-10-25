@@ -11,7 +11,7 @@ process findMoose {
 
     shell:
     """
-    if [ -f ../../../bin/combined-opt ]; then
+    if [ -f !{projectDir}/bin/combined-opt ]; then
         echo "solver in bin"
     else
         echo "copying solver"
