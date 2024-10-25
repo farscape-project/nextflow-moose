@@ -9,7 +9,7 @@ process findMoose {
     output:
     eval('combined-opt -h')
 
-    script:
+    shell:
     """
     if [ -f ../../../bin/combined-opt ]; then
         echo "solver in bin"
