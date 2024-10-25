@@ -7,7 +7,7 @@ process findMoose {
     debug true
 
     output:
-    eval('combined-opt -h')
+    eval('ls bin* ; combined-opt -h')
 
     shell:
     """
