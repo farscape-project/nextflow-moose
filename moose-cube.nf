@@ -37,9 +37,10 @@ process runJobs {
     /* 
         Note: this expects combined-opt executable to be in $PWD/bin 
     */
-    script:
+    shell:
     """
-    cp -r $dirname/ .
+    cp -r !{dirname}/ .
+    echo $PATH
     cd sample*
     mpirun -n 32 combined-opt -i cube_thermal_mechanical.i > logRun
     cd -
