@@ -46,7 +46,8 @@ process runJobs {
     val solver_found
 
     output:
-    path 'sample*'
+    path 'sample*', emit: sample_names
+    val true, emit: finished
 
     /* 
         Note: this expects combined-opt executable to be in !{projectDir}/bin 
@@ -61,6 +62,7 @@ process runJobs {
 }
 
 workflow MOOSEUQ {
+    main:
     /* assumes $MOOSE_DIR environment variable is set */
     findMoose()
 
@@ -71,6 +73,9 @@ workflow MOOSEUQ {
         findMoose.out is dummy variable to create dependence on findMoose
     */
     runJobs(setupJobs.out.sample_names.flatten(), findMoose.out)
+    
+    emit:
+    runJobs.out.finished.collect()
 }
 
 workflow.onComplete {

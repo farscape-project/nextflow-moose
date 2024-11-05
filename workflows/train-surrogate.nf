@@ -3,6 +3,9 @@ process findPOD {
     cpus 1
     time '20m'
 
+    input:
+    val num_samples
+
     debug true
     /* -path-to-samples could be an input? */
     output:
@@ -43,8 +46,13 @@ process trainXGBoost {
 }
 
 workflow POD_XGB_SURROGATE {
+    take:
+    ready
+
+    main:
     /* assumes $MOOSE_DIR environment variable is set */
-    findPOD | trainXGBoost 
+    findPOD(ready) 
+    trainXGBoost(findPOD.out)
 }
 
 workflow.onComplete {
