@@ -9,6 +9,7 @@ params.exodus_name = "*_out.e"
 params.workflow_type = "mooseuq"
 params.path_to_save_model = "."
 params.path_to_save_moosedata = "."
+params.surrogate_train_iter = 4000
 
 include { MOOSEUQ } from "./workflows/moose-uq.nf"
 include { POD_XGB_SURROGATE } from "./workflows/train-surrogate.nf"

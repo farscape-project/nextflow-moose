@@ -37,7 +37,7 @@ process trainXGBoost {
         -c ${params.uqconfig_fullpath} \
         --path-to-samples ${NXF_FILE_ROOT}/results/ \
         --pod-dir ${pod_dir}/ \
-        -ne 1000 \
+        -ne ${params.surrogate_train_iter} \
         --save-model
     """
 }
