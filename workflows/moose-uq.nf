@@ -1,8 +1,3 @@
-params.uqpath = '/lustre/scafellpike/local/HT04544/sht09/jxw92-sht09/projects/uq-toolkit'
-params.basedirpath = '/lustre/scafellpike/local/HT04544/sht09/jxw92-sht09/projects/workflow/nextflow/moose-cube-workflow/dev_thermocube/basedir'
-params.uqconfigpath = '/lustre/scafellpike/local/HT04544/sht09/jxw92-sht09/projects/workflow/nextflow/moose-cube-workflow/dev_thermocube/config_thermomech.jsonc'
-params.numsamples = 10
-
 process findMoose {
     debug true
 
@@ -24,7 +19,7 @@ process findMoose {
 }
 
 process setupJobs {
-    publishDir "output_setupjobs", pattern: "*.json", mode: "copy"
+    publishDir "${params.path_to_save_moosedata}", pattern: "*.json", mode: "copy"
     cpus 1
     time '10m'
 
@@ -36,17 +31,15 @@ process setupJobs {
 
     script:
     """
-    python ${params.uqpath}/python/setup_uq_run.py -c ${params.uqconfigpath} -b ${params.basedirpath} -n ${params.numsamples} > log_setup_uq.txt
+    python ${params.uqpath}/python/setup_uq_run.py -c ${params.uqconfig_fullpath} -b ${params.basedir_path} -n ${params.numsamples} > log_setup_uq.txt
     """
 }
 
 process runJobs {
-    publishDir "results", mode: 'copy'
+    publishDir "${params.path_to_save_moosedata}", mode: 'copy'
     cpus 32
 
     time '1h'
-
-    debug true
 
     input:
     val dirname
@@ -67,7 +60,7 @@ process runJobs {
     """
 }
 
-workflow {
+workflow MOOSEUQ {
     /* assumes $MOOSE_DIR environment variable is set */
     findMoose()
 
