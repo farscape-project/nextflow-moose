@@ -4,16 +4,16 @@ process findMoose {
     executor "local"
 
     output:
-    eval('combined-opt -h')
+    eval("${params.solver_name} -h")
 
     shell:
     """
     mkdir -p !{projectDir}/bin
-    if [ -f !{projectDir}/bin/combined-opt ]; then
+    if [ -f !{projectDir}/bin/${params.solver_name} ]; then
         echo "solver in bin"
     else
         echo "copying solver"
-        cp $MOOSE_DIR/modules/combined/combined-opt !{projectDir}/bin/
+        cp $MOOSE_DIR/modules/*/${params.solver_name} !{projectDir}/bin/
     fi
     """
 }
@@ -37,9 +37,7 @@ process setupJobs {
 
 process runJobs {
     publishDir "${params.path_to_save_moosedata}", mode: 'copy'
-    cpus 32
-
-    time '1h'
+    cpus params.moose_cpus
 
     input:
     val dirname
@@ -50,13 +48,13 @@ process runJobs {
     val true, emit: finished
 
     /* 
-        Note: this expects combined-opt executable to be in !{projectDir}/bin 
+        Note: this expects ${params.solver_name} executable to be in !{projectDir}/bin 
     */
     script:
     """
     cp -r $dirname/ .
     cd sample*
-    mpirun -n 32 combined-opt -i cube_thermal_mechanical.i > logRun
+    mpirun -n ${params.moose_cpus} ${params.solver_name} -i cube_thermal_mechanical.i > logRun
     cd -
     """
 }

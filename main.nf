@@ -5,6 +5,10 @@ params.uqconfig_name = "config*.jsonc"
 params.uqconfig_fullpath = "${params.basedir_path}/../${params.uqconfig_name}"
 params.numsamples = 10
 
+// params for using moose
+params.solver_name = "combined-opt"
+params.moose_cpus = 32
+
 // parameters for getting POD data
 params.fieldname = "temperature"
 params.num_pod_modes = 2
