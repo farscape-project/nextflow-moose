@@ -8,13 +8,7 @@ process findMoose {
 
     shell:
     """
-    mkdir -p !{projectDir}/bin
-    if [ -f !{projectDir}/bin/${params.solver_name} ]; then
-        echo "solver in bin"
-    else
-        echo "copying solver"
-        cp $MOOSE_DIR/modules/*/${params.solver_name} !{projectDir}/bin/
-    fi
+	
     """
 }
 
@@ -38,10 +32,10 @@ process setupJobs {
 process runJobs {
     publishDir "${params.path_to_save_moosedata}", mode: 'copy'
     cpus params.moose_cpus
+    memory '30 GB'
 
     input:
-    val dirname
-    val solver_found
+    path dirname
 
     output:
     path 'sample*', emit: sample_names
@@ -50,11 +44,10 @@ process runJobs {
     /* 
         Note: this expects ${params.solver_name} executable to be in !{projectDir}/bin 
     */
-    script:
+    shell:
     """
-    cp -r $dirname/ .
     cd sample*
-    mpirun -n ${params.moose_cpus} ${params.solver_name} -i cube_thermal_mechanical.i > logRun
+    mpirun -n ${params.moose_cpus} ${params.solver_name} -i ${params.moose_inputfile}
     cd -
     """
 }
@@ -62,7 +55,6 @@ process runJobs {
 workflow MOOSEUQ {
     main:
     /* assumes $MOOSE_DIR environment variable is set */
-    findMoose()
 
     setupJobs() 
     
@@ -70,7 +62,7 @@ workflow MOOSEUQ {
         run moose simulations to get all data (exodus, csv etc)
         findMoose.out is dummy variable to create dependence on findMoose
     */
-    runJobs(setupJobs.out.sample_names.flatten(), findMoose.out)
+    runJobs(setupJobs.out.sample_names.flatten())
     
     emit:
     runJobs.out.finished.collect()

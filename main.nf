@@ -6,8 +6,8 @@ params.uqconfig_fullpath = "${params.basedir_path}/../${params.uqconfig_name}"
 params.numsamples = 10
 
 // params for using moose
-params.solver_name = "combined-opt"
-params.moose_cpus = 32
+params.solver_name = "/opt/apollo/apollo-opt"
+params.moose_cpus = 1
 
 // parameters for getting POD data
 params.fieldname = "temperature"
