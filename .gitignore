@@ -5,7 +5,15 @@ work
 # user-related stuff
 bin/
 results*
+RESULTS
 output*
+moose_stuff/
+*.i
+*.csv
+runJob*
+stderr*
+stdout*
+run_case*
 
 TODO*
 setup_env.sh
