@@ -1,15 +1,9 @@
-process findMoose {
-    debug true
-
+process checkMooseExists {
+    // currently unused
     executor "local"
 
     output:
     eval("${params.solver_name} -h")
-
-    shell:
-    """
-	
-    """
 }
 
 process setupJobs {
