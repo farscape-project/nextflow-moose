@@ -4,6 +4,8 @@ params.basedir_path = "${params.uqpath}/run_case1_thermomechanicalcube/basedir/"
 params.uqconfig_name = "config*.jsonc"
 params.uqconfig_fullpath = "${params.basedir_path}/../${params.uqconfig_name}"
 params.numsamples = 10
+params.remesh = false
+params.meshdirname = "Meshing" // name of sub-directory of 'basedir' which contains mesh data
 
 // params for using moose
 params.solver_name = "/opt/apollo/apollo-opt"

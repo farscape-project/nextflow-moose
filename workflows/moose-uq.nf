@@ -29,16 +29,33 @@ process setupJobs {
     """
 }
 
-process runJobs {
-    publishDir "${params.path_to_save_moosedata}", mode: 'copy'
-    cpus params.moose_cpus
-    memory '30 GB'
+process newGeometry {
+    memory '20 GB'
 
     input:
     path dirname
 
     output:
-    path 'sample*', emit: sample_names
+    val true, emit: finished
+
+    shell:
+    """
+    cd sample*/${params.meshdirname}
+    python coil_target_remesher.py
+    cd -
+    """
+}
+
+process runJobs {
+    publishDir "${params.path_to_save_moosedata}", mode: 'copy'
+    cpus params.moose_cpus
+    memory '20 GB'
+
+    input:
+    path dirname
+    val ready // dummy variable to check `newGeometry` process complete
+
+    output:
     val true, emit: finished
 
     /* 
@@ -54,15 +71,18 @@ process runJobs {
 
 workflow MOOSEUQ {
     main:
-    /* assumes $MOOSE_DIR environment variable is set */
-
+    // set up sample directories
     setupJobs() 
-    
-    /* 
-        run moose simulations to get all data (exodus, csv etc)
-        findMoose.out is dummy variable to create dependence on findMoose
-    */
-    runJobs(setupJobs.out.sample_names.flatten())
+
+    if (params.remesh){
+        // generate mesh with cubit and VacuumMesher
+        newGeometry(setupJobs.out.sample_names.flatten())
+        // run MOOSE
+        runJobs(setupJobs.out.sample_names.flatten(), newGeometry.out.finished)
+    }
+    else {
+        runJobs(setupJobs.out.sample_names.flatten(), true)
+    }
     
     emit:
     runJobs.out.finished.collect()
