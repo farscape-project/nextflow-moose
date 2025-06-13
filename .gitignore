@@ -10,10 +10,15 @@ output*
 moose_stuff/
 *.i
 *.csv
-runJob*
+*runJob*
 stderr*
 stdout*
 run_case*
+*.png
+
+*example*
+*.log
+
 
 TODO*
 setup_env.sh
