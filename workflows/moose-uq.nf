@@ -33,6 +33,24 @@ process newGeometry {
     """
 }
 
+process newHTC {
+    memory '4 GB'
+	cpus 1
+
+    input:
+    path dirname
+
+    output:
+    val true, emit: finished
+
+    shell:
+    """
+    cd sample*/matprops
+    python calc_heat_transfer_coeff_dittusboelter.py -j htc_params.jsonc
+    cd -
+    """
+}
+
 process runJobs {
     publishDir "${params.path_to_save_moosedata}", mode: 'copy'
     cpus params.moose_cpus
@@ -44,10 +62,13 @@ process runJobs {
 
     input:
     path dirname
-    val ready // dummy variable to check `newGeometry` process complete
+    val mesh_ready // dummy variable to check `newGeometry` process complete
+    val htc_ready
 
     output:
     val true, emit: finished
+    path "sample*/input/*.e", emit: exofiles // save all files for each case
+	path "sample*/input/*.csv", emit: tabfiles
 
     /* 
         Note: this expects ${params.solver_name} executable to be in !{projectDir}/bin 
@@ -63,18 +84,30 @@ process runJobs {
 workflow MOOSEUQ {
     main:
     // set up sample directories
+    def mesh_finished = false
+    def htc_finished = false
     setupJobs() 
 
     if (params.remesh){
         // generate mesh with cubit and VacuumMesher
         newGeometry(setupJobs.out.sample_names.flatten())
-        // run MOOSE
-        runJobs(setupJobs.out.sample_names.flatten(), newGeometry.out.finished)
+        mesh_finished = newGeometry.out.finished
     }
     else {
-        runJobs(setupJobs.out.sample_names.flatten(), true)
+        mesh_finished = true
+    }
+
+    if (params.newhtc){
+        newHTC(setupJobs.out.sample_names.flatten())
+        htc_finished = newHTC.out.finished
+    }
+    else {
+        htc_finished = true
+
     }
     
+    // run MOOSE
+    runJobs(setupJobs.out.sample_names.flatten(), mesh_finished, htc_finished)
     emit:
     runJobs.out.finished.collect()
 }
