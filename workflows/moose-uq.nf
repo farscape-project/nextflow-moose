@@ -1,15 +1,7 @@
-process checkMooseExists {
-    // currently unused
-    executor "local"
-
-    output:
-    eval("${params.solver_name} -h")
-}
-
 process setupJobs {
-    publishDir "${params.path_to_save_moosedata}", pattern: "*.json", mode: "copy"
+    publishDir "${params.path_to_save_moosedata}", mode: "copy"
     cpus 1
-    time '10m'
+    time '60m'
 
     debug true
 
@@ -24,7 +16,8 @@ process setupJobs {
 }
 
 process newGeometry {
-    memory '20 GB'
+    memory '40 GB'
+	cpus 1
 
     input:
     path dirname
@@ -43,7 +36,11 @@ process newGeometry {
 process runJobs {
     publishDir "${params.path_to_save_moosedata}", mode: 'copy'
     cpus params.moose_cpus
-    memory '20 GB'
+	time { 4.hour }
+    memory '40 GB'
+	maxRetries 5
+	//debug true
+	clusterOptions '--exclusive'
 
     input:
     path dirname
@@ -58,7 +55,7 @@ process runJobs {
     shell:
     """
     cd sample*
-    mpirun -n ${params.moose_cpus} ${params.solver_name} -i ${params.moose_inputfile}
+    mpirun -n ${params.moose_cpus} ${params.solver_name} -w -i ${params.moose_inputfile}
     cd -
     """
 }
