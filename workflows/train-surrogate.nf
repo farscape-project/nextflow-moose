@@ -14,15 +14,15 @@ process findPOD {
     script:
     """
     python ${params.uqpath}/python/find_pod_modes.py \
-        --path-to-samples ${NXF_FILE_ROOT}/results/ \
+        --path-to-samples ${params.path_to_save_moosedata} \
         --exodus-name ${params.exodus_name} \
         --num-modes ${params.num_pod_modes} \
         --fieldname ${params.fieldname} \
-        --nozero 
+        --nozero --steady-state
     """
 }
 
-process trainXGBoost {
+process trainSurrogate {
     publishDir "${params.path_to_save_model}", mode: 'copy'
     cpus 1
 
@@ -32,27 +32,27 @@ process trainXGBoost {
     path pod_dir
 
     output:
-    path 'xgb_model.*'
+    path 'my_gpr.skops'
 
     script:
     """
-    python ${params.uqpath}/python/train_xgb.py \
+    python ${params.uqpath}/python/train_surrogate.py \
         -c ${params.uqconfig_fullpath} \
-        --path-to-samples ${NXF_FILE_ROOT}/results/ \
+        --path-to-samples ${params.path_to_save_moosedata} \
         --pod-dir ${pod_dir}/ \
         -ne ${params.surrogate_train_iter} \
-        --save-model
+        --save-model --steady-state
     """
 }
 
-workflow POD_XGB_SURROGATE {
+workflow POD_SURROGATE {
     take:
     ready
 
     main:
     /* assumes $MOOSE_DIR environment variable is set */
     findPOD(ready) 
-    trainXGBoost(findPOD.out)
+    trainSurrogate(findPOD.out)
 }
 
 workflow.onComplete {
