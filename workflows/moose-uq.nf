@@ -53,10 +53,10 @@ process newHTC {
 
 process runJobs {
     publishDir "${params.path_to_save_moosedata}", mode: 'copy'
+    errorStrategy 'ignore'
     cpus params.moose_cpus
-	time { 4.hour }
+	time ${params.moose_sim_time}
     memory '40 GB'
-	maxRetries 5
 	//debug true
 	clusterOptions '--exclusive'
 

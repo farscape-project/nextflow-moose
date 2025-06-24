@@ -11,6 +11,7 @@ params.meshdirname = "Meshing" // name of sub-directory of 'basedir' which conta
 // params for using moose
 params.solver_name = "/opt/apollo/apollo-opt"
 params.moose_cpus = 1
+params.moose_sim_time = "12h"
 
 // parameters for getting POD data
 params.fieldname = "temperature"
