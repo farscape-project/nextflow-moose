@@ -55,7 +55,7 @@ process runJobs {
     publishDir "${params.path_to_save_moosedata}", mode: 'copy'
     errorStrategy 'ignore'
     cpus params.moose_cpus
-	time ${params.moose_sim_time}
+	time params.moose_sim_time
     memory '40 GB'
 	//debug true
 	clusterOptions '--exclusive'
