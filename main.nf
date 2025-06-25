@@ -16,17 +16,17 @@ params.moose_sim_time = "12h"
 // parameters for getting POD data
 params.fieldname = "temperature"
 params.num_pod_modes = 2
-params.exodus_name = "*_out.e"
+params.results_name = "THeat_out"
 params.surrogate_train_iter = 4000
 
 // params for workflow
 params.path_to_save_model = "."
 params.path_to_save_moosedata = "."
 params.mooseuq_on = false
-params.trainxgb_on = false
+params.trainsurrogate_on = false
 
 include { MOOSEUQ } from "./workflows/moose-uq.nf"
-include { POD_XGB_SURROGATE } from "./workflows/train-surrogate.nf"
+include { POD_SURROGATE } from "./workflows/train-surrogate.nf"
 
 workflow {
     if (params.mooseuq_on) {
@@ -37,7 +37,7 @@ workflow {
         moose_sims_done = true
     }
     
-    if (params.trainxgb_on) {
-        POD_XGB_SURROGATE(moose_sims_done)
+    if (params.trainsurrogate_on) {
+        POD_SURROGATE(moose_sims_done)
     }
 }

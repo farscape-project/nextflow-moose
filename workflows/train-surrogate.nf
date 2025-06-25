@@ -15,7 +15,8 @@ process findPOD {
     """
     python ${params.uqpath}/python/find_pod_modes.py \
         --path-to-samples ${params.path_to_save_moosedata} \
-        --exodus-name ${params.exodus_name} \
+        --exodus-name ${params.results_name}.e \
+        --csvname ${params.results_name}.csv \
         --num-modes ${params.num_pod_modes} \
         --fieldname ${params.fieldname} \
         --nozero --steady-state
