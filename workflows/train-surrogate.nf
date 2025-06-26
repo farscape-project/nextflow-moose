@@ -6,13 +6,18 @@ process findPOD {
     input:
     val ready
 
-    debug true
     /* -path-to-samples could be an input? */
     output:
     path "pod_data"
 
     script:
     """
+    python ${params.uqpath}/python/check_completeness.py \
+        --path-to-samples ${params.path_to_save_moosedata} \
+        --exodus-name ${params.results_name}.e \
+        --csvname ${params.results_name}.csv \
+        --fieldname ${params.fieldname} 
+
     python ${params.uqpath}/python/find_pod_modes.py \
         --path-to-samples ${params.path_to_save_moosedata} \
         -o pod_data \
