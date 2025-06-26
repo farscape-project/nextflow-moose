@@ -19,9 +19,12 @@ params.num_pod_modes = 2
 params.results_name = "THeat_out"
 params.surrogate_train_iter = 4000
 
+// Surrogate params
+params.surrogateparams = "${params.uqpath}/gpr_params.jsonc"
+
 // params for workflow
-params.path_to_save_model = "."
 params.path_to_save_moosedata = "."
+params.path_to_save_model = "${params.path_to_save_moosedata}"
 params.mooseuq_on = false
 params.trainsurrogate_on = false
 
