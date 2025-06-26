@@ -41,6 +41,7 @@ process trainSurrogate {
     python ${params.uqpath}/python/train_surrogate.py \
         -c ${params.uqconfig_fullpath} \
         --path-to-samples ${params.path_to_save_moosedata} \
+        --surrogate-params ${params.surrogateparams} \
         --pod-dir ${pod_dir}/ \
         -ne ${params.surrogate_train_iter} \
         --save-model --steady-state
