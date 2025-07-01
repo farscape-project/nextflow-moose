@@ -34,6 +34,7 @@ process newGeometry {
 }
 
 process newHTC {
+	executor 'local'
     memory '4 GB'
 	cpus 1
 
