@@ -3,8 +3,6 @@ process setupJobs {
     cpus 1
     time '60m'
 
-    debug true
-
     output:
     path 'sample*', emit: sample_names
     path 'uq_log_*.json', emit: uqlog
