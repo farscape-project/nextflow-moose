@@ -5,11 +5,14 @@ work
 # user-related stuff
 bin/
 results*
-RESULTS
+RESULTS*
 output*
 moose_stuff/
 *.i
 *.csv
+*.cub5
+*-opt
+.jitcache
 *.jsonc
 *.json
 *runJob*
@@ -17,6 +20,7 @@ stderr*
 stdout*
 run_case*
 *.png
+basedir
 
 *example*
 *.log
