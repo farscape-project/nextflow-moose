@@ -1,5 +1,5 @@
 // params for uq-toolkit
-params.uqpath = "/lustre/scafellpike/local/HT04544/sht09/jxw92-sht09/projects/uq-toolkit"
+params.uqpath = "/opt/uq-toolkit/"
 params.basedir_path = "${params.uqpath}/run_case1_thermomechanicalcube/basedir/"
 params.uqconfig_name = "config*.jsonc"
 params.uqconfig_fullpath = "${params.basedir_path}/../${params.uqconfig_name}"
