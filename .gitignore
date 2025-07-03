@@ -1,11 +1,12 @@
 # nextflow generated stuff
-work
+*work
 .nextflow.log*
 .nextflow*
+trace-*.txt
 # user-related stuff
 bin/
-results*
-RESULTS*
+*results*
+*RESULTS*
 output*
 moose_stuff/
 *.i
