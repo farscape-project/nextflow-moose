@@ -12,6 +12,7 @@ Below we detail the steps for running a Nextflow+MOOSE pipeline.
 We assume the user has java/openjdk installed and loaded (to run nextflow). To use containers on HPC, singularity is required (which is commonly a loadable module). Otherwise, the main dependency is nextflow (installation details found below).
 
 <details> <summary>Nextflow</summary>
+    
 Nextflow can be installed as shown below, note that it depends on Java >= 11.0.
 ```bash
 cd $MYWORKDIR 
