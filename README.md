@@ -7,10 +7,11 @@ This repository currently builds on the example1 from [UQ-toolkit](https://githu
 
 Below we detail the steps for running a Nextflow+MOOSE pipeline. 
 
-### Prerequisities
+### Dependencies
 
-We assume the user has java/openjdk installed and loaded (to run nextflow) and singularity (to launch the containers).
+We assume the user has java/openjdk installed and loaded (to run nextflow). To use containers on HPC, singularity is required (which is commonly a loadable module). Otherwise, the main dependency is nextflow (installation details found below).
 
+<details> <summary>Nextflow</summary>
 Nextflow can be installed as shown below, note that it depends on Java >= 11.0.
 ```bash
 cd $MYWORKDIR 
@@ -25,6 +26,7 @@ mkdir $MYWORKDIR/.nextflow/framework/24.04.4/ -p
 cd $MYWORKDIR/.nextflow/framework/24.04.4/
 wget https://www.nextflow.io/releases/v24.04.4/nextflow-24.04.4-one.jar
 ```
+</details> 
 
 ### Running nextflow workflow
 
