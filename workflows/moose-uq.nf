@@ -2,6 +2,7 @@ process setupJobs {
     publishDir "${params.path_to_save_moosedata}", mode: "copy"
     cpus 1
     time '60m'
+    cache "lenient"
 
     output:
     path 'sample*', emit: sample_names
@@ -16,6 +17,7 @@ process setupJobs {
 process newGeometry {
     memory '40 GB'
 	cpus 1
+    cache "lenient"
 
     input:
     path dirname
@@ -35,6 +37,7 @@ process newHTC {
 	executor 'local'
     memory '4 GB'
 	cpus 1
+    cache "lenient"
 
     input:
     path dirname
@@ -57,6 +60,7 @@ process runJobs {
 	time params.moose_sim_time
     memory '40 GB'
 	//debug true
+    cache "lenient"
 	clusterOptions '--exclusive'
 
     input:
