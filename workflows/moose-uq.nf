@@ -15,9 +15,10 @@ process setupJobs {
 }
 
 process newGeometry {
-    memory '40 GB'
+    memory '20 GB'
 	cpus 1
     cache "lenient"
+    time "10m"
 
     input:
     path dirname
