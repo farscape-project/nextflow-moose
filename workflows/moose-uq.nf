@@ -71,14 +71,15 @@ process runJobs {
 
     output:
     val true, emit: finished
-    path "sample*/input/*.e", emit: exofiles // save all files for each case
-	path "sample*/input/*.csv", emit: tabfiles
+    path "${dirname}/${params.results_name}.e", emit: exofiles // save all files for each case
+	path "${dirname}/${params.results_name}.csv", emit: tabfiles
 
     script:
     """
-    cd sample*
+    cd ${dirname}
     mpirun -n ${params.moose_cpus} ${params.solver_name} -w -i ${params.moose_inputfile}
-    cd -
+    rm -rf .jitcache
+    cd ..
     """
 }
 
