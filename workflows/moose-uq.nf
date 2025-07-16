@@ -34,6 +34,25 @@ process newGeometry {
     """
 }
 
+process newGeometryPilot {
+    debug true
+	cpus 1
+    cache "lenient"
+    time "3h"
+	clusterOptions "-n ${params.moose_cpus}"
+
+    input:
+    path dirname
+
+    output:
+    val true, emit: finished
+
+    script:
+    """
+    make_meshing_pilotjob.py --path-to-mesh ${params.meshdirname} --samples $dirname
+    """
+}
+
 process newHTC {
 	executor 'local'
     memory '4 GB'
@@ -92,8 +111,14 @@ workflow MOOSEUQ {
 
     if (params.remesh){
         // generate mesh with cubit and VacuumMesher
-        newGeometry(setupJobs.out.sample_names.flatten())
-        mesh_finished = newGeometry.out.finished
+        if (params.meshing_pilotjob) {
+            newGeometryPilot(setupJobs.out.sample_names)
+            mesh_finished = newGeometryPilot.out.finished
+        }
+        else {
+            newGeometry(setupJobs.out.sample_names.flatten())
+            mesh_finished = newGeometry.out.finished
+        }
     }
     else {
         mesh_finished = true
