@@ -26,7 +26,7 @@ process newGeometry {
     output:
     val true, emit: finished
 
-    shell:
+    script:
     """
     cd sample*/${params.meshdirname}
     python coil_target_remesher.py
@@ -46,7 +46,7 @@ process newHTC {
     output:
     val true, emit: finished
 
-    shell:
+    script:
     """
     cd sample*/matprops
     python calc_heat_transfer_coeff_dittusboelter.py -j htc_params.jsonc
@@ -74,10 +74,7 @@ process runJobs {
     path "sample*/input/*.e", emit: exofiles // save all files for each case
 	path "sample*/input/*.csv", emit: tabfiles
 
-    /* 
-        Note: this expects ${params.solver_name} executable to be in !{projectDir}/bin 
-    */
-    shell:
+    script:
     """
     cd sample*
     mpirun -n ${params.moose_cpus} ${params.solver_name} -w -i ${params.moose_inputfile}
